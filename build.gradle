@@ -8,6 +8,12 @@ group = 'com.polarbookshop'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
 repositories {
     mavenCentral()
 }
@@ -40,6 +46,19 @@ dependencies {
 dependencyManagement {
     imports {
         mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
+    }
+}
+
+bootBuildImage {
+    imageName = "${project.name}"
+    environment = ["BP_JVM_VERSION": "17.*"]
+
+    docker {
+        publishRegistry {
+            username = project.findProperty("registryUsername")
+            password = project.findProperty("registryToken")
+            url = project.findProperty("registryUrl")
+        }
     }
 }
 
